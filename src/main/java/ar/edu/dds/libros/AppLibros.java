@@ -39,8 +39,6 @@ public class AppLibros {
 		
 	}
 	
-	asdasd
-	
 	public static EntityManagerFactory createEntityManagerFactory() throws Exception {
 		// https://stackoverflow.com/questions/8836834/read-environment-variables-in-persistence-xml-file
 		Map<String, String> env = System.getenv();

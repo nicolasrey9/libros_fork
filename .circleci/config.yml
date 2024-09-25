@@ -48,9 +48,11 @@ jobs:
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
- say-hello-workflow:
+  say-hello-workflow:
     jobs:
       - say-hello
+  maven_test:
+    jobs:
       - maven/test:
           command: '-X compile test'
           executor: java17

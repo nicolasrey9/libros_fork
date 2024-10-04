@@ -85,6 +85,7 @@ pipeline {
                 echo 'Restarting Deployment'
                 dir("${WORKDIR_VM2}/deploy-libros") {
                     sh 'kubectl apply -f .'
+                    sh 'kubectl rollout restart deployment app-deployment'
                 }
             }
         }

@@ -4,6 +4,7 @@ pipeline {
     environment {
         WORK_DIR = "/var/jenkins_home/${BUILD_ID}"
         MINIKUBE_WORK_DIR = "/home/user/prod"
+        WORKDIR_VM2 = "/home/user/prod"
     }
 
 
@@ -45,19 +46,41 @@ pipeline {
             }
         }
 
+        stage('Checkout en VM2') {
+            agent {label 'minikube'}
+            steps {
+                echo 'Checkout SCM Jobs Project'
+                dir("${WORKDIR_VM2}/tp") {
+                    git branch: "main",
+                    url: "https://github.com/nicolasrey9/libros_fork.git" // Repositorio de la APP
+                }
+            }
+        }
+
         stage('Docker Build') {
+            agent {label 'minikube'}
             steps {
                 echo 'Building Docker Image'
+                dir("${WORKDIR_VM2}/tp") {
+                    sh 'docker build -f DockerfileRender -t nicolasrey9/libros-tp .'
+                }
             }
         }
 
         stage('Docker Push') {
+            agent {label 'minikube'}
             steps {
                 echo 'Pushing Docker Image'
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD' // Usando las credenciales
+                    sh 'docker tag nicolasrey9/libros-tp nicolasrey9/libros-tp:latest'
+                    sh 'docker push nicolasrey9/libros-tp:latest'
+                }
             }
         }
 
         stage('Restart Deployment') {
+            agent {label 'minikube'}
             steps {
                 echo 'Restarting Deplyment'
             }

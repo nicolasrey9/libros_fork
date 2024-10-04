@@ -82,7 +82,10 @@ pipeline {
         stage('Restart Deployment') {
             agent {label 'minikube'}
             steps {
-                echo 'Restarting Deplyment'
+                echo 'Restarting Deployment'
+                dir("${WORKDIR_VM2}/deploy-libros") {
+                    sh 'kubectl apply -f .'
+                }
             }
         }
     }

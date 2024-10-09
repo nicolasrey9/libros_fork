@@ -34,8 +34,8 @@ public class AppLibros {
 		
 		LibrosController controller = new LibrosController(entityManagerFactory); 
 		
-		app.get("/libros", controller::listLibros);
-		app.post("/libros", controller::addLibro);
+		app.get("/home", controller::listLibros);
+		app.post("/home", controller::addLibro);
 		
 	}
 	
